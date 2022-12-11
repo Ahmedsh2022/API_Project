@@ -1,0 +1,91 @@
+*********  بعرف متغيرات ********
+querySelector( للوصول للكلاس html)
+
+(متغير يلي بكتب فيه اسم الشخص (اليوزر نيم
+let theInput = document.querySelector(".get-repos input");
+
+الزر البحث
+let getButton = document.querySelector(".get-button");
+
+مكان ظهور البيانات
+let reposData = document.querySelector(".show-data");
+
+عند الضغط ع الرز شغل الفتقشن هادي
+getButton.onclick = function () {
+  getRepos();
+};
+
+// Get Repos Function
+function getRepos() {
+
+  if (theInput.value == "") { // إذا كانت القيمة فارغة
+
+    reposData.innerHTML = "<span>Please Write Github Username.</span>";
+
+  } else {
+
+    fetch(`https://api.github.com/users/${theInput.value}/repos`)
+
+    .then((response) => response.json())
+
+    .then((repositories) => {
+
+      // إفراغ الحاوية
+      reposData.innerHTML = '';
+
+      // Loop On Repositories
+      repositories.forEach(repo => {
+
+        // قم بإنشاء عنصر (div) الرئيسي
+        let mainDiv = document.createElement("div");
+
+        // إنشاء نص اسم المكان يلي بخزن فيه ملفات المشروع 
+       //يُنشئ سلسلة نصية من القيمة المحددة.createTextNode
+        let repoName = document.createTextNode(repo.name);
+
+        // إلحاق النص بـ Div الرئيسي
+        mainDiv.appendChild(repoName);
+
+        // إنشاء رابط URL المكان يلي بخزن فيه ملفات المشروع
+        let theUrl = document.createElement('a');
+
+        // قم بإنشاء نص عنوان Url الخاص بإعادة الزيارة
+        let theUrlText = document.createTextNode("Visit");
+
+        // قم بإلحاق نص عنوان URL الخاص بـ Repo بعلامة الربط
+        theUrl.appendChild(theUrlText);
+
+        // إضافة مرجع النص التشعبي "href"
+        theUrl.href = `https://github.com/${theInput.value}/${repo.name}`;
+
+        // قم بتعيين السمة فارغة
+        theUrl.setAttribute('target', '_blank');
+2
+        // إلحاق رابط عنوان URL بـ Div الرئيسي
+        mainDiv.appendChild(theUrl);
+
+        // إنشاء نجوم( التقييم) العد سبان
+        let starsSpan = document.createElement("span");
+
+        // ( التقييم)   قم بإنشاء نص عدد النجوم
+        let starsText = document.createTextNode(`Stars ${repo.stargazers_count}`);
+
+        // أضف نص عدد النجوم إلى امتداد النجوم
+        starsSpan.appendChild(starsText);
+
+        // قم بإلحاق عدد النجوم الممتد إلى القسم الرئيسي
+        mainDiv.appendChild(starsSpan);
+
+        // اضافة الكلاس ع المين دف 
+        mainDiv.className = 'repo-box';
+
+        // إلحاق Div الرئيسي بالحاوية
+        reposData.appendChild(mainDiv);
+
+      });
+
+    });
+
+  }
+
+}
